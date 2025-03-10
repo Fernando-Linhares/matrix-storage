@@ -1,0 +1,27 @@
+{
+    "name": "matrix/storage",
+    "description": "File Upload and Retrieval Service using Swoole",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.4",
+        "ext-swoole": ">=4.8.0",
+        "ext-gd": "*",
+        "ext-fileinfo": "*",
+        "symfony/dotenv": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Fernando"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "phpstan/phpstan": "^2.1"
+    }
+}

@@ -1,0 +1,6 @@
+vendor
+tmp/logs/*
+resources/public/*
+resources/private/*
+.vscode
+.env
