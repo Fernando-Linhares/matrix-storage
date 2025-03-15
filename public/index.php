@@ -10,7 +10,7 @@ use App\DI\Container;
 use App\Controller\FileController;
 use App\Service\FileService;
 use App\Repository\FileRepository;
-use App\Handler\{ImageHandler, VideoHandler};
+use App\Handler\{ImageHandler};
 use App\Validator\FileValidator;
 use App\Logger\FileLogger;
 use App\Util\PathEncoder;
@@ -22,10 +22,7 @@ $dotenv->load(dirname(__DIR__, 1).'/.env');
 $container = new Container();
 
 $container->register(ServerConfig::class, function () {
-    return new ServerConfig([       
-        'resourceDir' => dirname(__DIR__, 1) . '/resources',
-        'logDir' => dirname(__DIR__, 1) . '/tmp/logs',
-    ]);
+    return new ServerConfig;
 });
 
 $container->register(PathEncoder::class, function () {
@@ -48,10 +45,6 @@ $container->register(ImageHandler::class, function ($container) {
     return new ImageHandler($container->get(FileLogger::class));
 });
 
-$container->register(VideoHandler::class, function ($container) {
-    return new VideoHandler($container->get(FileLogger::class));
-});
-
 $container->register(FileRepository::class, function ($container) {
     return new FileRepository(
         $container->get(ServerConfig::class),
@@ -65,7 +58,6 @@ $container->register(FileService::class, function ($container) {
         $container->get(FileRepository::class),
         $container->get(FileValidator::class),
         $container->get(ImageHandler::class),
-        $container->get(VideoHandler::class),
         $container->get(ServerConfig::class),
         $container->get(FileLogger::class)
     );
@@ -82,7 +74,6 @@ $container->register(FileController::class, function ($container) {
 $container->register(HttpServer::class, function ($container) {
     return new HttpServer(
         $container->get(ServerConfig::class),
-        $container->get(FileController::class),
         $container->get(FileLogger::class)
     );
 });

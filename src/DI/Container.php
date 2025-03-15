@@ -9,29 +9,29 @@ use Exception;
 
 class Container
 {
-    private array $services = [];
-    private array $instances = [];
+    private static array $services = [];
+    private static array $instances = [];
 
     public function register(string $name, Closure $factory): void
     {
-        $this->services[$name] = $factory;
+        self::$services[$name] = $factory;
     }
 
     public function get(string $name)
     {
-        if (!isset($this->services[$name])) {
+        if (!isset(self::$services[$name])) {
             throw new Exception("Service '$name' not found in container");
         }
 
-        if (!isset($this->instances[$name])) {
-            $this->instances[$name] = $this->services[$name]($this);
+        if (!isset(self::$instances[$name])) {
+            self::$instances[$name] = self::$services[$name]($this);
         }
 
-        return $this->instances[$name];
+        return self::$instances[$name];
     }
 
     public function has(string $name): bool
     {
-        return isset($this->services[$name]);
+        return isset(self::$services[$name]);
     }
 }

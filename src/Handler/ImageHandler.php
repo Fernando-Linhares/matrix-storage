@@ -14,7 +14,9 @@ class ImageHandler implements FileHandlerInterface
         'image/webp', 'image/bmp', 'image/tiff', 'image/svg+xml'
     ];
 
-    public function __construct(private readonly FileLogger $logger) {}
+    public function __construct(private readonly FileLogger $logger)
+    {
+    }
 
     public function process(string $sourcePath, array $options = []): bool
     {
@@ -49,8 +51,8 @@ class ImageHandler implements FileHandlerInterface
         [$width, $height, $type] = $imageInfo;
         
         $baseDir = $isPublic ? 
-            dirname(dirname($source)) . "/public/{$directory}/{$size}" : 
-            dirname(dirname($source)) . "/private/{$directory}/{$size}";
+            dirname(dirname($source)) . "/{$directory}/{$size}" : 
+            dirname(dirname($source)) . "/{$directory}/{$size}";
         
         if (!is_dir($baseDir)) {
             if (!mkdir($baseDir, 0755, true)) {
@@ -60,19 +62,16 @@ class ImageHandler implements FileHandlerInterface
         
         $destination = $baseDir . '/' . basename($filename);
         
-        // Create a new true color image
         $newImage = imagecreatetruecolor((int)$newWidth, (int)$newHeight);
         if ($newImage === false) {
             throw new Exception('Failed to create new image');
         }
         
-        // Create source image based on type
         $sourceImage = $this->createImageFromType($source, $type);
         if ($sourceImage === false) {
             throw new Exception('Failed to create source image');
         }
         
-        // Resize image
         if (!imagecopyresampled(
             $newImage, 
             $sourceImage, 
@@ -81,14 +80,13 @@ class ImageHandler implements FileHandlerInterface
             (int)$newHeight, 
             $width, 
             $height
-        )) {
+        )
+        ) {
             throw new Exception('Failed to resize image');
         }
         
-        // Save the resized image
         $result = $this->saveImage($newImage, $destination, $type);
         
-        // Clean up
         imagedestroy($newImage);
         imagedestroy($sourceImage);
         
@@ -101,6 +99,7 @@ class ImageHandler implements FileHandlerInterface
             IMAGETYPE_JPEG => imagecreatefromjpeg($source),
             IMAGETYPE_PNG => imagecreatefrompng($source),
             IMAGETYPE_GIF => imagecreatefromgif($source),
+            IMAGETYPE_WEBP => imagecreatefromwebp($source),
             default => false
         };
     }
@@ -111,6 +110,7 @@ class ImageHandler implements FileHandlerInterface
             IMAGETYPE_JPEG => imagejpeg($image, $destination, 90),
             IMAGETYPE_PNG => imagepng($image, $destination),
             IMAGETYPE_GIF => imagegif($image, $destination),
+            IMAGETYPE_WEBP => imagewebp($image, $destination),
             default => false
         };
         

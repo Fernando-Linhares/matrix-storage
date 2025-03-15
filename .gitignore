@@ -4,3 +4,4 @@ resources/public/*
 resources/private/*
 .vscode
 .env
+.idea

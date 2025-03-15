@@ -7,7 +7,8 @@ namespace App\Validator;
 class FileValidator
 {
     public function __construct(private readonly array $allowedTypes = [])
-    {}
+    {
+    }
 
     public function isAllowed(array $file): bool
     {

@@ -17,7 +17,8 @@ class FileLogger
 
     public function __construct(
         private readonly ServerConfig $config
-    ) {}
+    ) {
+    }
 
     public function info(string $message): void
     {

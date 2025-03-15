@@ -7,16 +7,16 @@ namespace App\Config;
 class ServerConfig
 {
     private readonly string $host;
-    private readonly int $port;
+    private readonly string $port;
     private readonly string $resourceDir;
     private readonly string $logDir;
 
-    public function __construct(array $config)
+    public function __construct()
     {
-        $this->host = $config['host'] ?? $_ENV('APP_HOST');
-        $this->port = $config['port'] ?? $_ENV('APP_PORT');
-        $this->resourceDir = $config['resourceDir'] ?? $_ENV('RESOURCE_DIR');
-        $this->logDir = $config['logDir'] ?? $_ENV['LOG_DIR'];
+        $this->host = $_ENV['APP_HOST'] ?? 'localhost';
+        $this->port = $_ENV['APP_PORT'] ?? '8727';
+        $this->resourceDir = $_ENV['RESOURCE_DIR'] ?? dirname(__DIR__, 2) . '/resources';
+        $this->logDir = $_ENV['LOG_DIR'] ?? dirname(__DIR__, 1) . '/tmp/logs';
     }
 
     public function getHost(): string
@@ -26,7 +26,7 @@ class ServerConfig
 
     public function getPort(): int
     {
-        return $this->port;
+        return intval($this->port);
     }
 
     public function getResourceDir(): string
